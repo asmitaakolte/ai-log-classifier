@@ -2,6 +2,7 @@ import joblib
 import boto3
 import smtplib
 from email.mime.text import MIMEText
+import json
 
 # Configuration
 S3_BUCKET = 'myawss3formonitoring'
@@ -12,7 +13,6 @@ SEND_NOTIFICATION = True
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 SMTP_USER = 'asmitaakolte@gmail.com'
-SMTP_PASS = 'cgmf rbjx vzwi girc'  # Use App Password, not Gmail login
 
 EMAIL_FROM = SMTP_USER
 EMAIL_TO = 'asmitaakolte97@gmail.com'
@@ -39,11 +39,26 @@ def classify_log_line(line):
     print(f"🔍 {line.strip()} ➜ {prediction.upper()}")
     return prediction
 
+
+def get_smtp_password():
+    secret_name = "smtpass"
+    region_name = "us-east-1"  # change to your region
+
+    # response = client.get_secret_value(SecretId=secret_name)
+    # print("Secrets Manager response:", response)
+
+    client = boto3.client("secretsmanager", region_name=region_name)
+    response = client.get_secret_value(SecretId=secret_name)
+   # secret_string = response.get("SecretString")
+    secret_pass  = json.loads(response["SecretString"])
+    print("secret_pass:", secret_pass["SMTP_PASS"])
+    return secret_pass["SMTP_PASS"]
+
 # Send email notification
 def send_alert(file, lines):
     subject = f"🚨 Alert: Errors found in {file}"
     body = f"The following error lines were detected in {file}:\n\n" + "\n".join(lines[:10])  # first 10 lines
-
+    SMTP_PASS = get_smtp_password()
     msg = MIMEText(body)
     msg["Subject"] = "Email Alert"
     msg["From"] = EMAIL_FROM
@@ -56,7 +71,7 @@ def send_alert(file, lines):
             server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
             print(f"📧 Email sent to {EMAIL_TO}")
     except Exception as e:
-        print(f"❌ Failed to send email: {e}")
+        print(f" Failed to send email: {e}")
 
 # Main logic
 def main():
