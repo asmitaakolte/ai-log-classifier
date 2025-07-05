@@ -1,0 +1,7 @@
+log,message_type
+"[ERROR] Timeout in db",error
+"[WARNING] Disk space low",warning
+"[INFO] User login successful",info
+"[CRITICAL] App crashed at 12:05",critical
+"[DEBUG] Checking route config",debug
+
