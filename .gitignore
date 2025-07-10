@@ -1,0 +1,15 @@
+# Ignore all .log files
+*.log
+
+# Ignore node_modules folder
+node_modules/
+
+# Ignore .env file (secrets)
+.env
+
+# Ignore system/IDE files
+.DS_Store
+.vscode/
+
+# Ignore mlruns
+mlruns/

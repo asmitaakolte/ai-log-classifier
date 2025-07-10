@@ -1,0 +1,15 @@
+s3:
+  bucket: myawss3formonitoring
+  prefix: logs/
+
+notification:
+  error_classes: ["ERROR", "CRITICAL"]
+  enabled: true
+
+smtp:
+  server: smtp.gmail.com
+  port: 587
+  user: asmitaakolte@gmail.com
+  to: asmitaakolte97@gmail.com
+  secret_name: cgmf rbjx vzwi girc
+  region: us-east-1
